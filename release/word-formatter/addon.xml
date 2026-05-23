@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<addin>
+  <name>文档排版助手</name>
+  <type>console</type>
+  <url>./web/index.html</url>
+  <taskpane>
+    <title>文档排版助手</title>
+    <url>./web/index.html</url>
+    <width>320</width>
+  </taskpane>
+</addin>

@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<customUI xmlns="http://schemas.microsoft.com/office/2006/01/customui">
+  <ribbon>
+    <tabs>
+      <tab id="formatTab" label="文档排版">
+        <group id="formatGroup" label="排版工具">
+          <button id="openFormatter"
+                  label="排版助手"
+                  size="large"
+                  onAction="OnAction"/>
+        </group>
+      </tab>
+    </tabs>
+  </ribbon>
+</customUI>
