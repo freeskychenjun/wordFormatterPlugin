@@ -22,6 +22,7 @@ export const defaultRules = {
       lineSpacing: 1.5,
       lineRule: 'auto',
       firstLineIndent: 0,
+      outlineLevel: 1,
     },
     heading2: {
       label: '二级标题',
@@ -36,6 +37,7 @@ export const defaultRules = {
       lineSpacing: 1.5,
       lineRule: 'auto',
       firstLineIndent: 0,
+      outlineLevel: 2,
     },
     heading3: {
       label: '三级标题',
@@ -50,6 +52,7 @@ export const defaultRules = {
       lineSpacing: 1.5,
       lineRule: 'auto',
       firstLineIndent: 0,
+      outlineLevel: 3,
     },
     heading4: {
       label: '四级标题',
@@ -64,6 +67,7 @@ export const defaultRules = {
       lineSpacing: 1.5,
       lineRule: 'auto',
       firstLineIndent: 0,
+      outlineLevel: 4,
     },
     body: {
       label: '正文',

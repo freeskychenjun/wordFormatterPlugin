@@ -17,9 +17,12 @@ export function getParagraphCount(doc) {
 export function getParagraphInfo(doc, index) {
   const para = doc.Paragraphs.Item(index + 1);
   const range = para.Range;
+  let styleName = '';
+  try { styleName = para.Style?.NameLocal || para.Style || ''; } catch { /* ignore */ }
   return {
     text: (range.Text || '').trim(),
     outlineLevel: range.OutlineLevel,
+    styleName,
     hasImage: range.InlineShapes && range.InlineShapes.Count > 0,
     rangeStart: range.Start,
     rangeEnd: range.End,
@@ -63,7 +66,10 @@ export function setParagraphFormat(doc, index, fmt) {
   if (fmt.lineSpacingRule !== undefined) pf.LineSpacingRule = fmt.lineSpacingRule;
   if (fmt.firstLineIndent !== undefined) pf.FirstLineIndent = fmt.firstLineIndent;
   if (fmt.charIndent !== undefined) pf.CharacterUnitFirstLineIndent = fmt.charIndent;
-  if (fmt.outlineLevel !== undefined) pf.OutlineLevel = fmt.outlineLevel;
+  if (fmt.outlineLevel !== undefined) {
+    try { para.OutlineLevel = fmt.outlineLevel; } catch { /* fallback */ }
+    try { pf.OutlineLevel = fmt.outlineLevel; } catch { /* ignore */ }
+  }
 }
 
 export function getTableCount(doc) {

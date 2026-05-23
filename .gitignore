@@ -1,6 +1,7 @@
 node_modules/
 dist/
 release/
+wps-addon/
 *.docx
 *.doc
 !readme.md

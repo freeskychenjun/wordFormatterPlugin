@@ -24,9 +24,16 @@ function loadRules() {
       }
       delete rule.styles.caption;
       for (const h of ['heading1', 'heading2', 'heading3', 'heading4']) {
-        if (rule.styles[h] && rule.styles[h].lineRule === 'exact') {
-          rule.styles[h].lineSpacing = 1.5;
-          rule.styles[h].lineRule = 'auto';
+        if (rule.styles[h]) {
+          if (rule.styles[h].lineRule === 'exact') {
+            rule.styles[h].lineSpacing = 1.5;
+            rule.styles[h].lineRule = 'auto';
+          }
+          // Fix outlineLevel: WPS JSAPI uses 1-based values (1=1级, 2=2级, ...)
+          const correctLevel = { heading1: 1, heading2: 2, heading3: 3, heading4: 4 }[h];
+          if (rule.styles[h].outlineLevel !== correctLevel) {
+            rule.styles[h].outlineLevel = correctLevel;
+          }
         }
       }
     }

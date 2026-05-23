@@ -1,44 +1,36 @@
 @echo off
 chcp 65001 >nul 2>&1
-setlocal enabledelayedexpansion
 
 echo ========================================
-echo   文档排版助手 - 安装插件
+echo   WordFormatterPlugin - Install
 echo ========================================
 echo.
 
-:: 检查是否有参数传入URL
-if "%~1"=="" (
-    echo 错误：请提供插件地址
-    echo.
-    echo 用法：install.bat ^<插件地址^>
-    echo 示例：install.bat http://192.168.1.100/formatter/
-    echo.
-    pause
-    exit /b 1
-)
+set "ADDON_URL=http://172.14.60.197:3000/"
 
-set ADDON_URL=%~1
+if not "%~1"=="" set "ADDON_URL=%~1"
 
-:: 确保URL以/结尾
-if not "%ADDON_URL:~-1%"=="/" set ADDON_URL=%ADDON_URL%/
+if not "%ADDON_URL:~-1%"=="/" set "ADDON_URL=%ADDON_URL%/"
 
-set JSADDONS=%APPDATA%\kingsoft\wps\jsaddons
+echo Plugin URL: %ADDON_URL%
+echo.
+
+set "JSADDONS=%APPDATA%\kingsoft\wps\jsaddons"
 
 if not exist "%JSADDONS%" mkdir "%JSADDONS%"
 
-:: 写入 publish.xml
-echo ^<?xml version="1.0" encoding="UTF-8"?^>^<jsplugins^>^<jspluginonline name="wordformatterplugin" type="wps" url="%ADDON_URL%" enable="enable_dev" /^>^</jsplugins^> > "%JSADDONS%\publish.xml"
+> "%JSADDONS%\publish.xml" echo ^<?xml version="1.0" encoding="UTF-8"?^>^<jsplugins^>^<jspluginonline name="wordformatterplugin" type="wps" url="%ADDON_URL%" debug="" enable="enable_dev" install="null" /^>^</jsplugins^>
 
 if exist "%JSADDONS%\publish.xml" (
+    echo Install success!
     echo.
-    echo 安装成功！
-    echo 插件地址：%ADDON_URL%
-    echo.
-    echo 请重启 WPS，功能区将出现"文档排版"标签页。
+    echo Next steps:
+    echo   1. Restart WPS
+    echo   2. Open WPS -^> Options -^> Add-ins (COM Add-ins)
+    echo   3. Find "wordformatterplugin" and click Enable
+    echo   4. The "WordFormatter" tab will appear in the ribbon
 ) else (
-    echo.
-    echo 安装失败，请检查权限。
+    echo Install failed. Check permissions.
 )
 
 echo.

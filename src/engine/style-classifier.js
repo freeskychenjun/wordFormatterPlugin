@@ -1,18 +1,39 @@
+const CAPTION_RE = /^[图表]\s*[\d一二三四五六七八九十]/;
 const HEADING_RE = /^(\d+(?:\.\d+)*)\s/;
 const MAX_HEADING_LENGTH = 60;
 
-export function classifyParagraph({ text, outlineLevel, hasImage, inTable }) {
+// Match both English "heading 1" and Chinese "标题 1" style names
+const HEADING_STYLE_RE = /(?:heading|标题)\s+(\d+)/i;
+
+function headingFromStyle(styleName) {
+  if (!styleName) return null;
+  const m = styleName.match(HEADING_STYLE_RE);
+  if (m) {
+    const level = parseInt(m[1]);
+    if (level >= 1 && level <= 4) return level;
+  }
+  return null;
+}
+
+export function classifyParagraph({ text, outlineLevel, hasImage, inTable, styleName }) {
   if (hasImage) return { type: 'image' };
 
-  if (text.startsWith('图') || text.startsWith('表')) {
-    return { type: text.startsWith('图') ? 'figCaption' : 'tblCaption' };
+  // Detect heading by style name (most reliable in WPS JSAPI)
+  const styleLevel = headingFromStyle(styleName);
+  if (styleLevel && text.length <= MAX_HEADING_LENGTH) {
+    return { type: `heading${styleLevel}` };
   }
 
-  if (outlineLevel >= 1 && outlineLevel <= 4) {
+  // Also check outlineLevel as fallback
+  if (typeof outlineLevel === 'number' && outlineLevel >= 0 && outlineLevel <= 3) {
     if (text.length <= MAX_HEADING_LENGTH) {
-      return { type: `heading${outlineLevel}` };
+      return { type: `heading${outlineLevel + 1}` };
     }
     return { type: 'body' };
+  }
+
+  if (CAPTION_RE.test(text)) {
+    return { type: text.startsWith('图') ? 'figCaption' : 'tblCaption' };
   }
 
   if (text.length <= MAX_HEADING_LENGTH) {

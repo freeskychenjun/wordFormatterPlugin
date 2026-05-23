@@ -8,6 +8,7 @@
 		"dev": "vite",
 		"build": "vite build",
 		"build:addon": "vite build && node scripts/build-addon.js",
+		"package:offline": "node scripts/package-offline.js",
 		"preview": "vite preview",
 		"test": "vitest run",
 		"test:watch": "vitest"

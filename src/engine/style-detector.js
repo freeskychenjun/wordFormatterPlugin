@@ -31,6 +31,7 @@ export async function scanDocument(doc, onProgress, skipPages = 0) {
       outlineLevel: item.outlineLevel,
       hasImage: item.hasImage,
       inTable: isInTable(item.rangeStart, item.rangeEnd, tableRanges),
+      styleName: item.styleName,
     }).type,
   }));
 
@@ -62,7 +63,7 @@ export async function scanDocument(doc, onProgress, skipPages = 0) {
         const text = raw[j].text;
         if (!text) break;
 
-        if (text.startsWith('图') || text.startsWith('表')) {
+        if (/^[图表]\s*[\d一二三四五六七八九十]/.test(text)) {
           const captionType = text.startsWith('图') ? 'figCaption' : 'tblCaption';
           results[j].type = captionType;
           captionIndices.add(j);
