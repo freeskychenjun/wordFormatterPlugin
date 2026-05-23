@@ -117,16 +117,46 @@ wpsjs debug
 ### 生产构建
 
 ```bash
-npm run build:addon
+npm run build
 ```
 
-输出到 `release/word-formatter/`，可直接部署。
+输出到 `dist/` 目录。
 
-### 正式安装
+## 团队部署
+
+将插件部署到内网 Web 服务器，团队成员无需安装 Node.js，只需运行一次注册脚本即可使用。
+
+### 第一步：构建并部署（开发者操作）
 
 ```bash
-wpsjs publish
+npm run build
 ```
+
+将 `dist/` 目录的全部文件部署到内网 Web 服务器。假设部署地址为：
+
+```
+http://192.168.1.100/formatter/
+```
+
+确保访问该地址能正常打开页面。Web 服务器可以是 IIS、Nginx、Apache 或任何静态文件服务器。
+
+### 第二步：团队成员安装
+
+将 `deploy/install.bat` 发送给同事，双击运行，传入插件地址：
+
+```
+install.bat http://192.168.1.100/formatter/
+```
+
+提示"安装成功"后，重启 WPS，功能区将出现"文档排版"标签页。
+
+### 第三步：卸载
+
+双击运行 `deploy/uninstall.bat`，重启 WPS 即可移除插件。
+
+### 更新插件
+
+更新服务器上 `dist/` 的文件即可，同事重启 WPS 后自动加载最新版本，无需重新安装。
 
 ## License
 
