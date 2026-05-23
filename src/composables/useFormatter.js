@@ -6,11 +6,32 @@ import { exportRuleToFile, importRuleFromFile } from '../utils/file-io.js';
 const STORAGE_KEY = 'word-formatter-rules';
 
 function loadRules() {
+  let rules;
   try {
     const saved = localStorage.getItem(STORAGE_KEY);
-    if (saved) return JSON.parse(saved);
+    if (saved) rules = JSON.parse(saved);
   } catch { /* ignore */ }
-  return [{ ...JSON.parse(JSON.stringify(defaultRules)) }];
+  if (!rules) return [{ ...JSON.parse(JSON.stringify(defaultRules)) }];
+
+  // Migrate: ensure figCaption/tblCaption exist, remove old caption, fix heading lineRule
+  for (const rule of rules) {
+    if (rule.styles) {
+      if (!rule.styles.figCaption) {
+        rule.styles.figCaption = { ...JSON.parse(JSON.stringify(defaultRules.styles.figCaption)) };
+      }
+      if (!rule.styles.tblCaption) {
+        rule.styles.tblCaption = { ...JSON.parse(JSON.stringify(defaultRules.styles.tblCaption)) };
+      }
+      delete rule.styles.caption;
+      for (const h of ['heading1', 'heading2', 'heading3', 'heading4']) {
+        if (rule.styles[h] && rule.styles[h].lineRule === 'exact') {
+          rule.styles[h].lineSpacing = 1.5;
+          rule.styles[h].lineRule = 'auto';
+        }
+      }
+    }
+  }
+  return rules;
 }
 
 const state = reactive({
@@ -18,6 +39,7 @@ const state = reactive({
   activeRuleIndex: 0,
   formatting: false,
   progress: '就绪',
+  progressPct: 0,
   result: null,
   error: null,
 });
@@ -69,8 +91,34 @@ export function useFormatter() {
 
     try {
       const rule = getActiveRule();
-      const result = await formatDocument(rule, (msg) => {
-        state.progress = msg;
+      const result = await formatDocument(rule, (info) => {
+        if (typeof info === 'string') {
+          state.progress = info;
+          state.progressPct = 0;
+          return;
+        }
+        switch (info.phase) {
+          case 'page':
+            state.progress = '正在设置页面...';
+            state.progressPct = 0;
+            break;
+          case 'scan':
+            state.progress = '正在扫描文档结构...';
+            state.progressPct = Math.round((info.current / info.total) * 30);
+            break;
+          case 'format':
+            state.progress = '正在排版...';
+            state.progressPct = 30 + Math.round((info.current / info.total) * 65);
+            break;
+          case 'table':
+            state.progress = '正在处理表格...';
+            state.progressPct = 95;
+            break;
+          case 'done':
+            state.progress = '排版完成';
+            state.progressPct = 100;
+            break;
+        }
       });
       state.result = result;
     } catch (err) {

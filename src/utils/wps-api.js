@@ -1,6 +1,6 @@
 function getApp() {
-  if (typeof Application !== 'undefined') return Application;
-  if (typeof wps !== 'undefined' && wps.WpsApplication) return wps.WpsApplication();
+  if (typeof window.Application !== 'undefined') return window.Application;
+  if (typeof window.wps !== 'undefined' && window.wps.WpsApplication) return window.wps.WpsApplication();
   throw new Error('WPS Application 不可用，请确认在 WPS 内运行');
 }
 
@@ -21,8 +21,20 @@ export function getParagraphInfo(doc, index) {
     text: (range.Text || '').trim(),
     outlineLevel: range.OutlineLevel,
     hasImage: range.InlineShapes && range.InlineShapes.Count > 0,
-    inTable: range.Tables && range.Tables.Count > 0,
+    rangeStart: range.Start,
+    rangeEnd: range.End,
+    pageNumber: range.Information ? range.Information(3) : 0,
   };
+}
+
+export function getTableRanges(doc) {
+  const count = doc.Tables.Count;
+  const ranges = [];
+  for (let i = 1; i <= count; i++) {
+    const tbl = doc.Tables.Item(i);
+    ranges.push({ start: tbl.Range.Start, end: tbl.Range.End });
+  }
+  return ranges;
 }
 
 export function setPageSetup(doc, settings) {
@@ -51,6 +63,7 @@ export function setParagraphFormat(doc, index, fmt) {
   if (fmt.lineSpacingRule !== undefined) pf.LineSpacingRule = fmt.lineSpacingRule;
   if (fmt.firstLineIndent !== undefined) pf.FirstLineIndent = fmt.firstLineIndent;
   if (fmt.charIndent !== undefined) pf.CharacterUnitFirstLineIndent = fmt.charIndent;
+  if (fmt.outlineLevel !== undefined) pf.OutlineLevel = fmt.outlineLevel;
 }
 
 export function getTableCount(doc) {
@@ -60,7 +73,19 @@ export function getTableCount(doc) {
 export function setTableOuterBorder(doc, tableIndex, lineWidth) {
   const table = doc.Tables.Item(tableIndex + 1);
   for (const borderType of [-1, -2, -3, -4]) {
-    table.Borders(borderType).LineWidth = lineWidth;
+    const border = table.Borders.Item(borderType);
+    border.LineStyle = 1;       // wdLineStyleSingle = 1
+    border.LineWidth = lineWidth;
+    border.Visible = true;
+  }
+}
+
+export function fitTableToWindow(doc, tableIndex) {
+  try {
+    const table = doc.Tables.Item(tableIndex + 1);
+    table.AutoFitBehavior(2); // wdAutoFitWindow = 2
+  } catch {
+    // 部分版本不支持
   }
 }
 

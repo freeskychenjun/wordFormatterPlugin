@@ -11,7 +11,9 @@
       </select>
     </label>
     <label>字号
-      <input type="number" v-model.number="style.fontSize" @change="save" min="5" max="72" step="0.5" :disabled="disabled" /> pt
+      <select v-model.number="style.fontSize" @change="save" :disabled="disabled">
+        <option v-for="s in fontSizes" :key="s.pt" :value="s.pt">{{ s.label }}</option>
+      </select>
     </label>
     <label>加粗
       <input type="checkbox" v-model="style.bold" @change="save" :disabled="disabled" :true-value="true" :false-value="false" />
@@ -31,15 +33,25 @@
       <input type="number" v-model.number="style.spaceAfter" @change="save" min="0" step="1" :disabled="disabled" /> pt
     </label>
     <label>行距
-      <input type="number" v-model.number="style.lineSpacing" @change="save" min="1" step="1" :disabled="disabled" />
-      <select v-model="style.lineRule" @change="save" :disabled="disabled">
+      <select v-model="style.lineRule" @change="onLineRuleChange" :disabled="disabled">
         <option value="exact">固定值</option>
         <option value="auto">多倍行距</option>
         <option value="atLeast">最小值</option>
       </select>
+      <input type="number" v-model.number="style.lineSpacing" @change="save"
+        :min="style.lineRule === 'auto' ? 1 : 1"
+        :step="style.lineRule === 'auto' ? 0.1 : 1"
+        :disabled="disabled" />
+      <span>{{ style.lineRule === 'auto' ? '倍' : 'pt' }}</span>
     </label>
     <label v-if="styleKey === 'body'">首行缩进
       <input type="number" v-model.number="style.charIndent" @change="save" min="0" step="1" :disabled="disabled" /> 字符
+    </label>
+    <label v-if="hasOutlineLevel">大纲级别
+      <select v-model.number="style.outlineLevel" @change="save" :disabled="disabled">
+        <option v-for="l in 9" :key="l" :value="l">{{ l }} 级</option>
+        <option :value="10">正文文本</option>
+      </select>
     </label>
   </div>
 </template>
@@ -47,6 +59,7 @@
 <script setup>
 import { reactive, watch, computed } from 'vue';
 import { useFormatter } from '../composables/useFormatter.js';
+import { FONT_SIZES } from '../utils/unit-convert.js';
 
 const props = defineProps({
   styleKey: { type: String, required: true },
@@ -55,10 +68,22 @@ const props = defineProps({
 const { state, getActiveRule, updateRule } = useFormatter();
 
 const fonts = ['宋体', '黑体', '楷体', '仿宋', '微软雅黑', 'Times New Roman', 'Arial', 'Calibri'];
+const fontSizes = FONT_SIZES;
 
 const disabled = computed(() => state.formatting);
 
+const hasOutlineLevel = computed(() => ['figCaption', 'tblCaption'].includes(props.styleKey));
+
 const style = reactive({ ...getActiveRule().styles[props.styleKey] });
+
+function onLineRuleChange() {
+  if (style.lineRule === 'auto') {
+    style.lineSpacing = 1.5;
+  } else if (style.lineSpacing < 10) {
+    style.lineSpacing = 20;
+  }
+  save();
+}
 
 watch(() => state.activeRuleIndex, () => {
   Object.assign(style, getActiveRule().styles[props.styleKey]);

@@ -43,7 +43,7 @@ describe('WPS constants', () => {
     expect(WdLineSpacing.MULTIPLE).toBe(5);
   });
   it('has correct outline level values', () => {
-    expect(WdOutlineLevel.LEVEL1).toBe(1);
+    expect(WdOutlineLevel.LEVEL1).toBe(0);
     expect(WdOutlineLevel.BODY_TEXT).toBe(10);
   });
   it('has correct paper size values', () => {

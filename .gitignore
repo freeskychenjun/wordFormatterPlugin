@@ -1,0 +1,7 @@
+node_modules/
+dist/
+release/
+*.docx
+*.doc
+!readme.md
+.DS_Store

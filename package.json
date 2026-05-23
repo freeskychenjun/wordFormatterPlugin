@@ -1,22 +1,24 @@
 {
-  "name": "wordformatterplugin",
-  "version": "1.0.0",
-  "description": "",
-  "type": "module",
-  "scripts": {
-    "dev": "vite",
-    "build": "vite build",
-    "build:addon": "vite build && node scripts/build-addon.js",
-    "preview": "vite preview",
-    "test": "vitest run",
-    "test:watch": "vitest"
-  },
-  "dependencies": {
-    "vue": "^3.5.34"
-  },
-  "devDependencies": {
-    "@vitejs/plugin-vue": "^6.0.7",
-    "vite": "^8.0.14",
-    "vitest": "^4.1.7"
-  }
+	"name": "wordformatterplugin",
+	"addonType": "wps",
+	"version": "1.0.0",
+	"description": "",
+	"type": "module",
+	"scripts": {
+		"dev": "vite",
+		"build": "vite build",
+		"build:addon": "vite build && node scripts/build-addon.js",
+		"preview": "vite preview",
+		"test": "vitest run",
+		"test:watch": "vitest"
+	},
+	"dependencies": {
+		"vue": "^3.5.34"
+	},
+	"devDependencies": {
+		"@vitejs/plugin-vue": "^6.0.7",
+		"vite": "^8.0.14",
+		"vitest": "^4.1.7",
+		"wpsjs": "^2.2.3"
+	}
 }

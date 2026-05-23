@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<JsPlugin>
+  <ApiVersion>1.0.0</ApiVersion>
+  <Name>文档排版助手</Name>
+  <Description>Word文档自动排版工具</Description>
+</JsPlugin>

@@ -13,7 +13,8 @@
         标题 {{ state.result.stats.heading }} 段，
         正文 {{ state.result.stats.body }} 段，
         图片 {{ state.result.stats.image }} 段，
-        图表标题 {{ state.result.stats.caption }} 段
+        图标题 {{ state.result.stats.figCaption }} 段，
+        表标题 {{ state.result.stats.tblCaption }} 段
       </p>
     </div>
     <div v-if="state.error" class="progress-error">
@@ -29,8 +30,7 @@ import { useFormatter } from '../composables/useFormatter.js';
 const { state } = useFormatter();
 
 const progressPercent = computed(() => {
-  const match = state.progress.match(/(\d+)%/);
-  return match ? match[1] + '%' : '0%';
+  return state.progressPct + '%';
 });
 </script>
 

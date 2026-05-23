@@ -35,7 +35,15 @@
       <details>
         <summary>表格</summary>
         <div class="table-fields">
-          <label>外边框 <input type="number" v-model.number="activeRule.table.outerBorderWidth" @change="save" step="0.5" min="0" :disabled="state.formatting" /> pt</label>
+          <label>外边框线宽 <input type="number" v-model.number="activeRule.table.outerBorderWidth" @change="save" step="0.5" min="0" max="3" :disabled="state.formatting" /> pt（0 = 不设置）</label>
+          <label><input type="checkbox" v-model="activeRule.table.autoFitWindow" @change="save" :disabled="state.formatting" :true-value="true" :false-value="false" /> 根据窗口调整表格</label>
+        </div>
+      </details>
+      <details>
+        <summary>跳过页面</summary>
+        <div class="skip-fields">
+          <label>跳过前 <input type="number" v-model.number="activeRule.skipPages" @change="save" min="0" step="1" :disabled="state.formatting" /> 页（0 = 不跳过）</label>
+          <p class="hint">封面、目录等不需要排版的页面</p>
         </div>
       </details>
     </div>
@@ -114,7 +122,8 @@ function save() {
   font-weight: 500;
 }
 .page-fields label,
-.table-fields label {
+.table-fields label,
+.skip-fields label {
   display: block;
   margin: 4px 0;
   font-size: 12px;
@@ -122,11 +131,17 @@ function save() {
 }
 .page-fields input,
 .page-fields select,
-.table-fields input {
+.table-fields input,
+.skip-fields input {
   width: 60px;
   padding: 3px 6px;
   border: 1px solid #d1d5db;
   border-radius: 3px;
   margin: 0 4px;
+}
+.skip-fields .hint {
+  font-size: 11px;
+  color: #9ca3af;
+  margin: 2px 0 0;
 }
 </style>

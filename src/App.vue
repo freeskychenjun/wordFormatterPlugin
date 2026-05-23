@@ -3,7 +3,13 @@
 </template>
 
 <script setup>
+import { onMounted } from 'vue';
 import TaskPane from './components/TaskPane.vue';
+import ribbon from './ribbon.js';
+
+onMounted(() => {
+  window.ribbon = ribbon;
+});
 </script>
 
 <style>

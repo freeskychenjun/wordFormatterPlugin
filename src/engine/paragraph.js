@@ -55,6 +55,8 @@ function buildFormatArgs(styleRule, isImage) {
     fmt.charIndent = 0;
   }
 
+  if (styleRule.outlineLevel !== undefined) fmt.outlineLevel = styleRule.outlineLevel;
+
   return fmt;
 }
 

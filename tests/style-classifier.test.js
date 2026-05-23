@@ -7,11 +7,18 @@ describe('classifyParagraph', () => {
       .toEqual({ type: 'image' });
   });
 
-  it('classifies caption by pattern', () => {
+  it('classifies figCaption by pattern', () => {
     expect(classifyParagraph({ text: '图 1-1 总平面布置图', outlineLevel: 10, hasImage: false, inTable: false }))
-      .toEqual({ type: 'caption' });
+      .toEqual({ type: 'figCaption' });
+    expect(classifyParagraph({ text: '图一 总平面布置图', outlineLevel: 10, hasImage: false, inTable: false }))
+      .toEqual({ type: 'figCaption' });
+  });
+
+  it('classifies tblCaption by pattern', () => {
     expect(classifyParagraph({ text: '表2-3 工程量清单', outlineLevel: 10, hasImage: false, inTable: false }))
-      .toEqual({ type: 'caption' });
+      .toEqual({ type: 'tblCaption' });
+    expect(classifyParagraph({ text: '表一 工程量清单', outlineLevel: 10, hasImage: false, inTable: false }))
+      .toEqual({ type: 'tblCaption' });
   });
 
   it('classifies heading by outline level', () => {

@@ -1,9 +1,17 @@
 import { defineConfig } from 'vite';
 import vue from '@vitejs/plugin-vue';
+import { copyFile } from 'wpsjs/vite_plugins';
 
 export default defineConfig({
-  plugins: [vue()],
+  plugins: [
+    copyFile({
+      src: 'manifest.xml',
+      dest: 'manifest.xml',
+    }),
+    vue(),
+  ],
   server: {
+    host: '0.0.0.0',
     port: 3000,
     strictPort: true,
   },
