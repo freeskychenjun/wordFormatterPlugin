@@ -1,4 +1,4 @@
-import { getActiveDocument, setScreenUpdating } from '../utils/wps-api.js';
+import { getActiveDocument, setScreenUpdating, convertNumberingToText } from '../utils/wps-api.js';
 import { scanDocument } from './style-detector.js';
 import { applyPageSetup } from './page-setup.js';
 import { applyParagraphStyle } from './paragraph.js';
@@ -43,6 +43,9 @@ export async function formatDocument(rule, onProgress) {
           stats[styleName]++;
         }
       } else if (styleTypes.includes(styleName) && rule.styles[styleName]) {
+        if (styleName.startsWith('heading')) {
+          convertNumberingToText(doc, para.index);
+        }
         applyParagraphStyle(doc, para.index, rule.styles[styleName]);
         if (styleName.startsWith('heading')) stats.heading++;
         else if (styleName === 'body') stats.body++;
