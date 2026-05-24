@@ -1,14 +1,53 @@
 # WordFormatter Plugin - Local HTTP Server
-# Serves static files from the web/ subdirectory on localhost:3000
+# Serves static files from either an override path or the local web/ directory.
 # No dependencies required - uses built-in .NET HttpListener
 
 param([int]$Port = 3000)
 
-$webRoot = Join-Path $PSScriptRoot "web"
 $errorActionPreference = "Stop"
 
-if (-not (Test-Path $webRoot -PathType Container)) {
-    Write-Host "[ERROR] web directory not found: $webRoot" -ForegroundColor Red
+function Resolve-WebRoot {
+    $candidates = @()
+
+    if ($env:WORDFORMATTER_WEBROOT) {
+        $candidates += $env:WORDFORMATTER_WEBROOT
+    }
+
+    $configPath = Join-Path $PSScriptRoot "web-root.txt"
+    if (Test-Path $configPath -PathType Leaf) {
+        try {
+            $configuredPath = (Get-Content $configPath -Encoding UTF8 | Select-Object -First 1).Trim()
+            if ($configuredPath) {
+                $candidates += $configuredPath
+            }
+        }
+        catch {
+            Write-Host "[WARNING] Failed to read web-root.txt: $_" -ForegroundColor Yellow
+        }
+    }
+
+    $candidates += (Join-Path $PSScriptRoot "web")
+
+    foreach ($candidate in $candidates) {
+        if (-not $candidate) { continue }
+        try {
+            $resolved = (Resolve-Path $candidate -ErrorAction Stop).Path
+            if (Test-Path (Join-Path $resolved "index.html") -PathType Leaf) {
+                return $resolved
+            }
+        }
+        catch {
+            # try next candidate
+        }
+    }
+
+    return $null
+}
+
+$webRoot = Resolve-WebRoot
+
+if (-not $webRoot) {
+    Write-Host "[ERROR] No valid web root found. Checked web-root.txt, WORDFORMATTER_WEBROOT, and local web directory." -ForegroundColor Red
     exit 1
 }
 
@@ -46,6 +85,7 @@ catch {
 }
 
 Write-Host "WordFormatter server started on http://localhost:${Port}/" -ForegroundColor Green
+Write-Host "Serving files from: $webRoot" -ForegroundColor Green
 Write-Host "Press Ctrl+C to stop."
 
 try {

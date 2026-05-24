@@ -7,6 +7,7 @@ echo ========================================
 echo.
 
 set "INSTALL_DIR=%LOCALAPPDATA%\WordFormatter"
+set "PROJECT_DIST=D:\Claude Code\wordFormatterPlugin\dist"
 
 REM ---- Check web files exist ----
 if not exist "%~dp0web\index.html" (
@@ -29,6 +30,11 @@ if not exist "%INSTALL_DIR%\web" mkdir "%INSTALL_DIR%\web"
 echo Copying web files...
 xcopy /E /Y /Q "%~dp0web" "%INSTALL_DIR%\web\" >nul
 copy /Y "%~dp0server.ps1" "%INSTALL_DIR%\server.ps1" >nul
+if exist "%PROJECT_DIST%\index.html" (
+    > "%INSTALL_DIR%\web-root.txt" echo %PROJECT_DIST%
+) else (
+    if exist "%INSTALL_DIR%\web-root.txt" del /f /q "%INSTALL_DIR%\web-root.txt" >nul 2>&1
+)
 echo Done.
 echo.
 

@@ -6,3 +6,4 @@ wps-addon/
 *.doc
 !readme.md
 .DS_Store
+.claude/

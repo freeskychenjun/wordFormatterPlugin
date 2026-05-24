@@ -48,6 +48,10 @@ export const WdBorder = {
   RIGHT: -4,
 };
 
+export const PAPER_SIZES = {
+  A4: { width: 21.0, height: 29.7 },
+};
+
 export const WdPaperSize = {
   A4: 7,
 };
