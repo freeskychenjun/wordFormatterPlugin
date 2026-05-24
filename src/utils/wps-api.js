@@ -86,6 +86,26 @@ export function setTableOuterBorder(doc, tableIndex, lineWidth) {
   }
 }
 
+export function setTableFont(doc, tableIndex, fontCN, fontEN) {
+  const table = doc.Tables.Item(tableIndex + 1);
+  const rows = table.Rows;
+  const rowCount = rows.Count;
+  for (let r = 1; r <= rowCount; r++) {
+    let cells;
+    try { cells = rows.Item(r).Cells; } catch { continue; }
+    const cellCount = cells.Count;
+    for (let c = 1; c <= cellCount; c++) {
+      try {
+        const f = cells.Item(c).Range.Font;
+        if (fontCN !== undefined) f.Name = fontCN;
+        if (fontEN !== undefined) f.NameAscii = fontEN;
+      } catch {
+        // merged cells may throw
+      }
+    }
+  }
+}
+
 export function fitTableToWindow(doc, tableIndex) {
   try {
     const table = doc.Tables.Item(tableIndex + 1);

@@ -1,6 +1,9 @@
 <template>
   <div class="task-pane">
-    <h2 class="title">文档排版助手</h2>
+    <h2 class="title">
+      <img class="title-icon" :src="'./images/assistant.svg'" alt="" aria-hidden="true" />
+      <span>文档排版助手</span>
+    </h2>
 
     <div class="rule-select">
       <label>当前规则</label>
@@ -78,10 +81,18 @@ function save() {
   color: #1f2937;
 }
 .title {
+  display: flex;
+  align-items: center;
+  gap: 8px;
   font-size: 16px;
   margin: 0 0 12px;
   padding-bottom: 8px;
   border-bottom: 1px solid #e5e7eb;
+}
+.title-icon {
+  width: 20px;
+  height: 20px;
+  flex: 0 0 auto;
 }
 .rule-select {
   margin-bottom: 12px;

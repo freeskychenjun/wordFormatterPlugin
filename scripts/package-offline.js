@@ -36,6 +36,10 @@ if (existsSync(htmlPath)) {
 cpSync(join(offline, 'server.ps1'), join(output, 'server.ps1'));
 cpSync(join(offline, 'install.bat'), join(output, 'install.bat'));
 cpSync(join(offline, 'uninstall.bat'), join(output, 'uninstall.bat'));
+cpSync(join(root, 'public', 'icon.png'), join(output, 'web', 'icon.png'));
+cpSync(join(root, 'public', 'icon2.png'), join(output, 'web', 'icon2.png'));
+cpSync(join(root, 'public', 'icon-btn.png'), join(output, 'web', 'icon-btn.png'));
+cpSync(join(root, 'public', 'images'), join(output, 'web', 'images'), { recursive: true });
 
 console.log('');
 console.log(`Offline package created: ${output}`);

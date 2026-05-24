@@ -37,6 +37,11 @@ function loadRules() {
         }
       }
     }
+    // Migrate table config: add fontCN/fontEN if missing
+    if (rule.table && rule.table.fontCN === undefined) {
+      rule.table.fontCN = defaultRules.table.fontCN;
+      rule.table.fontEN = defaultRules.table.fontEN;
+    }
   }
   return rules;
 }

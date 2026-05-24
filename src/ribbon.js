@@ -40,7 +40,17 @@ function getBaseUrl() {
   return hashIdx >= 0 ? href.substring(0, hashIdx) : href;
 }
 
-function GetImage() {
+function LoadImage(imageName) {
+  if (imageName === 'assistant') {
+    return 'icon.png';
+  }
+  return '';
+}
+
+function GetImage(control) {
+  if (control && control.Id === 'openTaskPane') {
+    return 'icon.png';
+  }
   return '';
 }
 
@@ -55,6 +65,7 @@ function OnGetVisible() {
 export default {
   OnAddinLoad,
   OnAction,
+  LoadImage,
   GetImage,
   OnGetEnabled,
   OnGetVisible,

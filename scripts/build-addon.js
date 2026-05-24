@@ -12,6 +12,10 @@ if (!existsSync(output)) mkdirSync(output, { recursive: true });
 
 // Copy dist files
 cpSync(dist, join(output, 'web'), { recursive: true });
+copyFileSync(join(root, 'public', 'icon.png'), join(output, 'web', 'icon.png'));
+copyFileSync(join(root, 'public', 'icon2.png'), join(output, 'web', 'icon2.png'));
+copyFileSync(join(root, 'public', 'icon-btn.png'), join(output, 'web', 'icon-btn.png'));
+cpSync(join(root, 'public', 'images'), join(output, 'web', 'images'), { recursive: true });
 
 // Fix HTML paths to be relative
 const htmlPath = join(output, 'web', 'index.html');
@@ -37,5 +41,9 @@ writeFileSync(join(output, 'addon.xml'), addonXml);
 
 // Copy ribbon.xml
 copyFileSync(join(addon, 'ribbon.xml'), join(output, 'ribbon.xml'));
+copyFileSync(join(root, 'public', 'icon.png'), join(output, 'icon.png'));
+copyFileSync(join(root, 'public', 'icon2.png'), join(output, 'icon2.png'));
+copyFileSync(join(root, 'public', 'icon-btn.png'), join(output, 'icon-btn.png'));
+cpSync(join(root, 'public', 'images'), join(output, 'images'), { recursive: true });
 
 console.log(`Addon packaged to: ${output}`);

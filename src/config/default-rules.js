@@ -117,6 +117,8 @@ export const defaultRules = {
   table: {
     outerBorderWidth: 1,
     autoFitWindow: true,
+    fontCN: '宋体',
+    fontEN: 'Times New Roman',
   },
   skipPages: 0,
   image: {
